@@ -1,0 +1,22 @@
+function doPost(e) {
+  try {
+    const data = JSON.parse(e.postData.contents);
+
+    const name = data.name;
+    const phone = data.phone;
+    const email = data.email;
+    const college = data.college;
+    const screenshotData = data.screenshot;
+
+    const sheet = SpreadsheetApp.openById("1BMKnGip7AYkZasD4DW4otN3okYBkrUi7752BUMHRhfM").getActiveSheet();
+    sheet.appendRow([new Date(), name, phone, email, college]);
+ve
+    const folder = DriveApp.getFolderById("11CpJo2VhfU0zrqMh7s5_OJHVPzXmO__p");
+    const blob = Utilities.newBlob(Utilities.base64Decode(screenshotData), "image/png", `${name}_screenshot.png`);
+    folder.createFile(blob);
+
+    return ContentService.createTextOutput("Success").setMimeType(ContentService.MimeType.TEXT);
+  } catch (err) {
+    return ContentService.createTextOutput("Error: " + err.message);
+  }
+}
